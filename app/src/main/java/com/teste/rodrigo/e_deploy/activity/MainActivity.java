@@ -1,10 +1,13 @@
 package com.teste.rodrigo.e_deploy.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.teste.rodrigo.e_deploy.Constants.Constants;
 import com.teste.rodrigo.e_deploy.R;
 import com.teste.rodrigo.e_deploy.api.ApiService;
 import com.teste.rodrigo.e_deploy.api.IApiService;
@@ -78,44 +81,40 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btBuscar)
     protected void onClickBuscar(){
-        filtrar(etCidade.getText().toString().toUpperCase(), etEstado.getText().toString().toUpperCase());
+        List<State> listaFiltrada =  filtrar(etCidade.getText().toString().toUpperCase(), etEstado.getText().toString().toUpperCase());
+
+        Intent i = new Intent(this, ListaResultadoActivity.class);
+        i.putParcelableArrayListExtra(Constants.KEY_LIST, (ArrayList<? extends Parcelable>) listaFiltrada);
+
+        startActivity(i);
+
     }
 
-    public void filtrar(String cidade, String estado){
-        String teste1 = " ";
+    public List<State> filtrar(String cidade, String estado){
+
         List<State> lista = new ArrayList<>();
 
         for (State s : mStates) {
 
-            if (s.getEstado().startsWith("") && s.getNome().startsWith("acr")) {
-                lista.add(s);
+            if(cidade.equalsIgnoreCase("")){
+                if (s.getEstado().toUpperCase().startsWith(estado)) {
+                    lista.add(s);
+                }
+            }else if(estado.equalsIgnoreCase("")){
+                if ( s.getNome().toUpperCase().startsWith(cidade)) {
+                    lista.add(s);
+                }
+            }else{
+                if (s.getEstado().toUpperCase().startsWith(estado) && s.getNome().toUpperCase().startsWith(cidade)) {
+                    lista.add(s);
+                }
             }
+
+
 
         }
-        lista.get(0);
-
-        String teste = "";
+        return lista;
     }
 
-    private void getPoint(State s) {
-        ApiService api = new ApiService();
-        Retrofit retrofit = api.getInstance();
-        IApiService iApiService = retrofit.create(IApiService.class);
 
-        Call<Long> call = iApiService.getPoint(s);
-
-        call.enqueue(new Callback<Long>() {
-
-
-            @Override
-            public void onResponse(Call<Long> call, Response<Long> response) {
-                String ok = "";
-            }
-
-            @Override
-            public void onFailure(Call<Long> call, Throwable t) {
-                String ok = "";
-            }
-        });
-    }
 }
