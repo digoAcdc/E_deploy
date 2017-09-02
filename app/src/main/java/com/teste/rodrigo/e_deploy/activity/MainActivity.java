@@ -9,6 +9,8 @@ import com.teste.rodrigo.e_deploy.api.IApiService;
 import com.teste.rodrigo.e_deploy.model.State;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,11 +29,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*api = new ApiService();
-        retrofit = api.getInstance();
-        iApiService = retrofit.create(IApiService.class);*/
-        getPoint();
-       // getStates();
+
+        getStates();
+String teste1 = " ";
+        List<State> lista =  mStates.stream().filter(s -> s.getEstado().contains("Acre")).collect(Collectors.toList());
+
+        String teste = "";
+
+
     }
 
     private void getStates() {
@@ -53,36 +58,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*iApiService.getListStates()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<States>() {
-                    @Override
-                    public void onCompleted() {
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(States states) {
-                        mStates = states.getLstStates() ;
-                    }
-                });*/
     }
 
-    private void getPoint(){
+    private void getPoint(State s){
         ApiService api = new ApiService();
         Retrofit retrofit = api.getInstance();
         IApiService iApiService = retrofit.create(IApiService.class);
 
-        State s = new State();
-        s.setEstado("Acre");
-        s.setNome("Acrelândia");
-        Call<Long> call = iApiService.getPoint(s);
+               Call<Long> call = iApiService.getPoint(s);
 
         call.enqueue(new Callback<Long>() {
 
