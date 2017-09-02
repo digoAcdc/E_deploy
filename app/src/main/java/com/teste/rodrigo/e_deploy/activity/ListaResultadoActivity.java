@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.teste.rodrigo.e_deploy.Constants.Constants;
 import com.teste.rodrigo.e_deploy.R;
@@ -32,6 +33,8 @@ public class ListaResultadoActivity extends AppCompatActivity {
     @BindView(R.id.rvResultados)
     RecyclerView rvResultados;
 
+    List<State> mList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,7 @@ public class ListaResultadoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Intent i = getIntent();
-        List<State> lista = (ArrayList<State>) i.getSerializableExtra(Constants.KEY_LIST);
+        mList = (ArrayList<State>) i.getSerializableExtra(Constants.KEY_LIST);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.txt_resultado));
@@ -48,7 +51,7 @@ public class ListaResultadoActivity extends AppCompatActivity {
         rvResultados.setLayoutManager(new LinearLayoutManager(this));
         rvResultados.setHasFixedSize(true);
 
-        rvResultados.setAdapter(new ResultadoAdapter(this, onClickItem(), lista));
+        rvResultados.setAdapter(new ResultadoAdapter(this, onClickItem(), mList));
 
     }
 
@@ -56,7 +59,7 @@ public class ListaResultadoActivity extends AppCompatActivity {
         return new ResultadoAdapter.ResultadoOnClickListener() {
             @Override
             public void OnClickResultado(View view, int index) {
-
+                getPoint(mList.get(Integer.parseInt(view.getTag().toString())));
             }
         };
     }
@@ -78,7 +81,6 @@ public class ListaResultadoActivity extends AppCompatActivity {
     }
 
 
-
     private void getPoint(State s) {
         ApiService api = new ApiService();
         Retrofit retrofit = api.getInstance();
@@ -91,7 +93,10 @@ public class ListaResultadoActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<Long> call, Response<Long> response) {
-                String ok = "";
+                Intent i = new Intent(ListaResultadoActivity.this, PontuacaoActivity.class);
+                i.putExtra(Constants.KEY_PONTUACAO, response.body().toString());
+                i.putExtra(Constants.KEY_CIDADE, s.getNome());
+                startActivity(i);
             }
 
             @Override

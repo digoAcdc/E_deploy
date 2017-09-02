@@ -6,4 +6,5 @@
     <string name="txt_resultado">Resultado</string>
     <string name="label_list_estado">Estado: %1$s</string>
     <string name="label_list_cidade">Cidade: %1$s</string>
+    <string name="label_pontuacao">A pontuação da cidade de %1$s é %2$s</string>
 </resources>

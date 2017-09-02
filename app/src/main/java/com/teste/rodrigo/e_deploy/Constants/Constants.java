@@ -7,6 +7,8 @@ package com.teste.rodrigo.e_deploy.Constants;
 public class Constants {
 
     public static final String BASE_URL = "http://wsteste.devedp.com.br/";
-    public static final String KEY_LIST = "http://wsteste.devedp.com.br/";
+    public static final String KEY_LIST = "lista";
+    public static final String KEY_PONTUACAO = "pontuacao";
+    public static final String KEY_CIDADE = "cidade";
 
 }
