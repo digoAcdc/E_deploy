@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:label="Busca"
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
@@ -22,7 +23,7 @@
         <activity android:name=".activity.ListaResultadoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name=".activity.PontuacaoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
     </application>
 
 </manifest>
