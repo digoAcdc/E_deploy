@@ -9,6 +9,8 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * Created by not on 01/09/2017.
@@ -16,15 +18,15 @@ import retrofit2.http.POST;
 
 public interface IApiService {
 
-//    @GET("/Master/CidadeServico.svc/rest/BuscaTodasCidades")
-//    Observable<States> getListStates();
+   @GET("/Master/CidadeServico.svc/rest/BuscaTodasCidades")
+   Observable<List<State>> getListStates();
 
-    @GET("Master/CidadeServico.svc/rest/BuscaTodasCidades")
+   /* @GET("Master/CidadeServico.svc/rest/BuscaTodasCidades")
     Call<List<State>> getListStates();
+*/
+   /* @POST("Master/CidadeServico.svc/rest/BuscaPontos")
+    Call<Long> getPoint(@Body State state);*/
 
     @POST("Master/CidadeServico.svc/rest/BuscaPontos")
-    Call<Long> getPoint(@Body State state);
-
-    /*@POST("Master/CidadeServico.svc/rest/BuscaPontos")
-    Observable<Long> getPoint(@Query("State") State state);*/
+    Observable<Long> getPoint(@Body State state);
 }

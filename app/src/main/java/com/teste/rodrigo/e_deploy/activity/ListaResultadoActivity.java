@@ -1,15 +1,12 @@
 package com.teste.rodrigo.e_deploy.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.teste.rodrigo.e_deploy.Constants.Constants;
 import com.teste.rodrigo.e_deploy.R;
@@ -23,10 +20,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ListaResultadoActivity extends AppCompatActivity {
 
@@ -76,13 +73,38 @@ public class ListaResultadoActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-
     }
 
 
     private void getPoint(State s) {
         ApiService api = new ApiService();
+        Retrofit retrofit = api.getInstance();
+        IApiService iApiService = retrofit.create(IApiService.class);
+        iApiService.getPoint(s)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .doOnError(throwable -> onErrorHandling(throwable))
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        Intent i = new Intent(ListaResultadoActivity.this, PontuacaoActivity.class);
+                        i.putExtra(Constants.KEY_PONTUACAO, String.valueOf(aLong));
+                        i.putExtra(Constants.KEY_CIDADE, s.getNome());
+                        startActivity(i);
+                    }
+                });
+       /* ApiService api = new ApiService();
         Retrofit retrofit = api.getInstance();
         IApiService iApiService = retrofit.create(IApiService.class);
 
@@ -103,6 +125,11 @@ public class ListaResultadoActivity extends AppCompatActivity {
             public void onFailure(Call<Long> call, Throwable t) {
                 String ok = "";
             }
-        });
+        });*/
+    }
+
+    private void onErrorHandling(Throwable e) {
+
+
     }
 }

@@ -1,10 +1,15 @@
 package com.teste.rodrigo.e_deploy.api;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
 import com.teste.rodrigo.e_deploy.Constants.Constants;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -19,13 +24,31 @@ public class ApiService {
             .addConverterFactory(GsonConverterFactory.create());
 
     public Retrofit getInstance() {
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
+        httpClient.interceptors().clear();
+
+        httpClient.addNetworkInterceptor(new StethoInterceptor());
         httpClient.addInterceptor(logging);
 
         OkHttpClient client = httpClient.build();
 
-        Retrofit retrofit = builder.client(client).build();
+        //Retrofit retrofit = builder.client(client).build();
+
+        Retrofit retrofit = builder
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+
+
 
 
         return retrofit;
